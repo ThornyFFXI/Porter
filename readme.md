@@ -18,15 +18,15 @@ Note that you can mix and match IDs and item names, and the comments are not nec
 All commands can be prefixed with **/porter** or **/po**.<br>
 Any parameter that includes a space must be enclosed in quotation marks(**"**).<br>
 
-**/po**
+**/po**<br>
 Opens configuration window in imgui.<br><br>
 
-**/po help**
+**/po help**<br>
 Opens help window in imgui.<br><br>
 
-**/po pack [optional: filename]**
-**/ac pack**
-**/lac pack**
+**/po pack [optional: filename]**<br>
+**/ac pack**<br>
+**/lac pack**<br>
 Examines your inventory for slips and items that can be stored in them, then stores all items that can be stored.  This will not retrieve items from bags other than inventory.  If you specify a filename, porter will avoid items listed in that file.  /ac and /lac options require the corresponding plugin loaded, and will substitute your currently loaded profile for the file.  File should be the short name of the file (Warrior in the earlier example), including the extension if it is not .lua(it should be .lua, though).<br>
 
 **/po unpack [required: filename]**<br>
@@ -34,12 +34,12 @@ Examines your inventory for slips and items that can be stored in them, then sto
 **/lac unpack**<br>
 Examines your inventory for slips that have items in your file and retrieves those items from those slips.  /ac and /lac options require the corresponding plugin loaded, and will substitute your currently loaded profile for the file.<br>
 
-**/po preppack [optional: filename]**
-**/ac preppack**
-**/lac preppack**
+**/po preppack [optional: filename]**<br>
+**/ac preppack**<br>
+**/lac preppack**<br>
 Examines your containers for slips and items that can be stored in them, then pulls all those items and slips to your inventory to simplify use of pack function.  If you specify a filename, porter will avoid items listed in that file.  /ac and /lac options require the corresponding plugin loaded, and will substitute your currently loaded profile for the file.<br>
 
-**/po prepunpack [required: filename]**
-**/ac prepunpack**
-**/lac prepunpack**
+**/po prepunpack [required: filename]**<br>
+**/ac prepunpack**<br>
+**/lac prepunpack**<br>
 Examines your containers for slips that contain items listed in your file and retrieves those slips to simplify use of unpack function.  /ac and /lac options require the corresponding plugin loaded, and will substitute your currently loaded profile for the file.
