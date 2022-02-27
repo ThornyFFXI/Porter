@@ -7,12 +7,12 @@ end
 if (pZoneFlags == 0) then
     print(chat.header('Porter') .. chat.error('Zone flag signature scan failed.'));
 else
-    pZoneOffset = ashita.memory.read_uint32(pZoneFlags, 0x09);
+    pZoneOffset = ashita.memory.read_uint32(pZoneFlags + 0x09);
     if (pZoneOffset == 0) then
         pZoneFlags = 0;
         print(chat.header('Porter') .. chat.error('Zone flag offset not found.'));
     else
-        pZoneFlags = ashita.memory.read_uint32(pZoneFlags, 0x17);
+        pZoneFlags = ashita.memory.read_uint32(pZoneFlags + 0x17);
         if (pZoneFlags == 0) then
             print(chat.header('Porter') .. chat.error('Zone flag sub pointer not found.'));
         end
