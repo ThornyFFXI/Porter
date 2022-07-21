@@ -22,6 +22,32 @@ local slipTable = require('slips');
 
 local data = {};
 
+function data:CheckAugment(slipNumber, extdata)
+    local augType = struct.unpack('B', extdata, 1);
+    if slipNumber == 29313 then
+        --No augmented items in sky/abj slip..        
+        if (augType == 2) or (augType == 3) then
+            return false;
+        end
+    elseif slipNumber == 29324 then
+        --Relic must be augmented to store it.
+        if (augType == 2) or (augType == 3) then
+            local itemTable = extdata:totable();
+            return (ashita.bits.unpack_be(itemTable, 16, 11) ~= 0);
+        end
+        return false;
+    else
+        --Items with an active trial cannot be stored.
+        local augFlag = struct.unpack('B', item.Extra, 2);
+        local itemTable = item.Extra:totable();
+        if (bit.band(augFlag, 0x40) ~= 0) and (ashita.bits.unpack_be(itemTable, 80, 15) ~= 0) then
+            return false;
+        end
+    end
+    return true;
+end
+
+
 function data:CheckInMogHouse()
     --Default to false if pointer scan failed
     if (pZoneFlags == 0) then
@@ -89,10 +115,10 @@ end
 
 --Returns a table of the player's current slip items.
 function data:GetPlayerSlips()
-    local slips = gData:GetSlipTable();
+    local slips = self:GetSlipTable();
     local playerSlips = {};
     for container = 0,16 do
-        if gData:GetContainerAvailable(container) then
+        if self:GetContainerAvailable(container) then
             local inventory = AshitaCore:GetMemoryManager():GetInventory();
             for index = 1,81 do
                 local item = inventory:GetContainerItem(container, index);

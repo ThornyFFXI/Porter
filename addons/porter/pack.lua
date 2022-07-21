@@ -122,31 +122,6 @@ function pack:ItemNameByIndex(index)
     return resource.Name[1];
 end
 
-local function CheckAugment(slipNumber, extdata)
-    local augType = struct.unpack('B', extdata, 1);
-    if slipNumber == 2 then
-        --No augmented items in sky/abj slip..        
-        if (augType == 2) or (augType == 3) then
-            return false;
-        end
-    elseif slipNumber == 13 then
-        --Relic must be augmented to store it.
-        if (augType == 2) or (augType == 3) then
-            local itemTable = extdata:totable();
-            return (ashita.bits.unpack_be(itemTable, (16 * i), 11) ~= 0);
-        end
-        return false;
-    else
-        --Items with an active trial cannot be stored.
-        local augFlag = struct.unpack('B', item.Extra, 2);
-        local itemTable = item.Extra:totable();
-        if (bit.band(augFlag, 0x40) ~= 0) and (ashita.bits.unpack_be(itemTable, 80, 15) ~= 0) then
-            return false;
-        end
-    end
-    return true;
-end
-
 function pack:SendTrade()
     local playerSlips = gData:GetPlayerSlips();
     local slippableItems = {};
@@ -158,7 +133,7 @@ function pack:SendTrade()
             if slipNumber then
                 if (not self.Include:contains(item.Id)) and (not gSettings.ExcludePack:contains(item.Id)) then
                     local slip = playerSlips[slipNumber];
-                    if slip and slip.Container == 0 and not gData:CheckSlipItem(slip, storageIndex) and CheckAugment(slipNumber, item.Extra) then
+                    if slip and slip.Container == 0 and not gData:CheckSlipItem(slip, storageIndex) and gData:CheckAugment(slipNumber, item.Extra) then
                         local slipId = slip.Item.Id;
                         if not slippableItems[slipId] then
                             slippableItems[slipId] = T{ slip.Item.Index, index };

@@ -47,7 +47,7 @@ function prep:PreparePack(includeList)
                 local item = inventory:GetContainerItem(container, index);
                 if item and (item.Id > 0) and (item.Count > 0) and (item.Flags ~= 5) and (item.Flags ~= 19) and (item.Flags ~= 25) then
                     local slipId, storageIndex = gData:GetSlip(item.Id);
-                    if slipId and storageIndex then
+                    if slipId and storageIndex and gData:CheckAugment(slipId, item.Extra) then
                         local slip = playerSlips[slipId];
                         if slip then
                             if (not gData:CheckSlipItem(slip, storageIndex)) and (not exclude:contains(item.Id)) and (not includeList:contains(item.Id)) then
