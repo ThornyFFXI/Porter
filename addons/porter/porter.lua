@@ -1,6 +1,6 @@
 addon.name      = 'Porter';
 addon.author    = 'Thorny';
-addon.version   = '1.01';
+addon.version   = '1.02';
 addon.desc      = 'Simplifies usage of porter moogles.';
 addon.link      = 'https://github.com/ThornyFFXI/';
 
