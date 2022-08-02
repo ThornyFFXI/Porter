@@ -38,8 +38,8 @@ function data:CheckAugment(slipNumber, extdata)
         return false;
     else
         --Items with an active trial cannot be stored.
-        local augFlag = struct.unpack('B', item.Extra, 2);
-        local itemTable = item.Extra:totable();
+        local augFlag = struct.unpack('B', extdata, 2);
+        local itemTable = extdata:totable();
         if (bit.band(augFlag, 0x40) ~= 0) and (ashita.bits.unpack_be(itemTable, 80, 15) ~= 0) then
             return false;
         end
