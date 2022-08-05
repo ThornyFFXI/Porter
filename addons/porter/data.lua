@@ -22,6 +22,8 @@ local slipTable = require('slips');
 
 local data = {};
 
+local relicSlips = T{ 29324, 29328, 29329, 29337, 29338 };
+
 function data:CheckAugment(slipNumber, extdata)
     local augType = struct.unpack('B', extdata, 1);
     if slipNumber == 29313 then
@@ -29,7 +31,7 @@ function data:CheckAugment(slipNumber, extdata)
         if (augType == 2) or (augType == 3) then
             return false;
         end
-    elseif slipNumber == 29324 then
+    elseif relicSlips:contains(slipNumber) then
         --Relic must be augmented to store it.
         if (augType == 2) or (augType == 3) then
             local itemTable = extdata:totable();
