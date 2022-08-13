@@ -26,6 +26,19 @@ local relicSlips = T{ 29324, 29328, 29329, 29337, 29338 };
 
 function data:CheckAugment(slipNumber, extdata)
     local augType = struct.unpack('B', extdata, 1);
+    local augFlag = struct.unpack('B', extdata, 2);
+    local itemTable = extdata:totable();
+    local maxAugments = 5;
+    
+    --Magian style augment
+    if (bit.band(augFlag, 0x40) ~= 0) then
+        maxAugments = 4;
+        --An item with an incomplete trial can never be stored.
+        if (ashita.bits.unpack_be(itemTable, 80, 15) ~= 0) and (ashita.bits.unpack_be(itemTable, 95, 1) == 0) then
+            return false;
+        end
+    end
+    
     if slipNumber == 29313 then
         --No augmented items in sky/abj slip..        
         if (augType == 2) or (augType == 3) then
@@ -35,17 +48,18 @@ function data:CheckAugment(slipNumber, extdata)
         --Relic must be augmented to store it.
         if (augType == 2) or (augType == 3) then
             local itemTable = extdata:totable();
-            return (ashita.bits.unpack_be(itemTable, 16, 11) ~= 0);
+            local hasAugment = false;
+            for i = 1,maxAugments do
+                local augmentId = ashita.bits.unpack_be(itemTable, (16 * i), 11);
+                if (augmentId > 0) then
+                    hasAugment = true;
+                end
+            end
+            return hasAugment;
         end
         return false;
-    else
-        --Items with an active trial cannot be stored.
-        local augFlag = struct.unpack('B', extdata, 2);
-        local itemTable = extdata:totable();
-        if (bit.band(augFlag, 0x40) ~= 0) and (ashita.bits.unpack_be(itemTable, 80, 15) ~= 0) then
-            return false;
-        end
     end
+    
     return true;
 end
 
