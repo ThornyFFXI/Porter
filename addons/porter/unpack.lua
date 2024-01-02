@@ -66,7 +66,10 @@ local StorageSlipIds = {
     29336,
     29337,
     29338,
-    29339
+    29339,
+    29340,
+    29341,
+    29342
 };
 
 local function hasItem(id)
