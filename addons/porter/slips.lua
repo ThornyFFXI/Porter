@@ -33,4 +33,7 @@ local slipItems = {
     [slipIDs[31]] = {23812, 23813, 23814, 23815, 23816, 23817, 23818, 23819, 23820, 23821, 23832, 23833, 23834, 23835, 23836}, -- 15
 };
 
-return slipItems;
+return {
+    SlipIDs = slipIDs,
+    SlipItems = slipItems,
+};

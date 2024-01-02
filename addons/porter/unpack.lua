@@ -38,36 +38,7 @@ local MenuIdByZone = {
     [298] = 13      --Walk of Echoes [P1]
 }
 
-local StorageSlipIds = {
-    29312,
-    29313,
-    29314,
-    29315,
-    29316,
-    29317,
-    29318,
-    29319,
-    29320,
-    29321,
-    29322,
-    29323,
-    29324,
-    29325,
-    29326,
-    29327,
-    29328,
-    29329,
-    29330,
-    29331,
-    29332,
-    29333,
-    29334,
-    29335,
-    29336,
-    29337,
-    29338,
-    29339
-};
+local StorageSlipIds = gData:GetSlipIDs();
 
 local function hasItem(id)
     local inventory = AshitaCore:GetMemoryManager():GetInventory();

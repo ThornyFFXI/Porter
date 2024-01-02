@@ -18,7 +18,9 @@ else
         end
     end
 end
-local slipTable = require('slips');
+local slipData = require('slips');
+local slipTable = slipData.SlipItems;
+local slipIDs = slipData.SlipIDs;
 
 local data = {};
 
@@ -189,6 +191,10 @@ function data:GetSlip(itemId)
     end
 
     return nil;
+end
+
+function data:GetSlipIDs()
+    return slipIDs;
 end
 
 function data:GetSlipTable()
