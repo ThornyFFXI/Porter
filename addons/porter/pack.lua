@@ -123,6 +123,7 @@ function pack:ItemNameByIndex(index)
 end
 
 function pack:SendTrade()
+    local shouldContain = (gSettings.ReversePack == true);
     local playerSlips = gData:GetPlayerSlips();
     local slippableItems = {};
     local inventory = AshitaCore:GetMemoryManager():GetInventory();
@@ -131,7 +132,7 @@ function pack:SendTrade()
         if (item.Id > 0) and (item.Count > 0) then
             local slipNumber, storageIndex = gData:GetSlip(item.Id);
             if slipNumber then
-                if (not self.Include:contains(item.Id)) and (not gSettings.ExcludePack:contains(item.Id)) then
+                if (self.Include:contains(item.Id) == shouldContain) and (not gSettings.ExcludePack:contains(item.Id)) then
                     local slip = playerSlips[slipNumber];
                     if slip and slip.Container == 0 and not gData:CheckSlipItem(slip, storageIndex) and gData:CheckAugment(slipNumber, item.Extra) then
                         local slipId = slip.Item.Id;

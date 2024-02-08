@@ -72,6 +72,7 @@ local function SaveFunction(self, characterSpecific)
     WriteNumericArray(self.ForceEnableContainers, file);
     file:write(' },\n');
     file:write('    BlockInput = ' .. tostring(self.BlockInput) .. ',\n');
+    file:write('    ReversePack = ' .. tostring(self.ReversePack) .. ',\n');
     file:write('    RetryDelay = ' .. self.RetryDelay .. ',\n');
     file:write('    MaxPackets = ' .. self.MaxPackets .. '\n');
     file:write('};\n\n');
@@ -86,6 +87,7 @@ local defaultSettings = {
     ForceDisableContainers = {}, 
     ForceEnableContainers = {},
     BlockInput = true,
+    ReversePack = false,
     RetryDelay = 6,
     MaxPackets = 1
 };

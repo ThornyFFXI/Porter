@@ -25,7 +25,7 @@ end
 
 function SettingsGui:Render()
     if (self.IsOpen[1]) then
-        imgui.SetNextWindowContentSize({ 223, 282 });
+        imgui.SetNextWindowContentSize({ 223, 296 });
         if (imgui.Begin(string.format('%s v%s', addon.name, addon.version), self.IsOpen, ImGuiWindowFlags_AlwaysAutoResize)) then
             imgui.BeginGroup();
             imgui.TextColored(self.Theme.Header, 'Save Mode');
@@ -58,6 +58,11 @@ function SettingsGui:Render()
                 self.Parent:Save(self.Parent.CharacterSpecific);
             end
             imgui.ShowHelp('When checked, Porter will block input while dealing with porter moogle to prevent accidentally talking to NPCs and locking client.', true);
+            if imgui.Checkbox('Reverse Pack', { self.Parent.ReversePack }) then
+                self.Parent.ReversePack = not self.Parent.ReversePack;
+                self.Parent:Save(self.Parent.CharacterSpecific);
+            end
+            imgui.ShowHelp('When checked, pack and preppack commands will use the items your current xml/lua needs instead of the items it doesn\'t.', true);
             imgui.TextColored(self.Theme.Header, 'Retry Delay');
             imgui.ShowHelp('Delay, in seconds, before Porter will resend a packet that the server has not responded to.', true);
             local retryDelay = { self.Parent.RetryDelay; }

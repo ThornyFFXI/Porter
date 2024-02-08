@@ -35,6 +35,7 @@ local function hasItem(id)
 end
 
 function prep:PreparePack(includeList)
+    local shouldContain = (gSettings.ReversePack == true);
     local exclude = gSettings.ExcludePack;
     local prepItems = T{};
     
@@ -50,7 +51,7 @@ function prep:PreparePack(includeList)
                     if slipId and storageIndex and gData:CheckAugment(slipId, item.Extra) then
                         local slip = playerSlips[slipId];
                         if slip then
-                            if (not gData:CheckSlipItem(slip, storageIndex)) and (not exclude:contains(item.Id)) and (not includeList:contains(item.Id)) then
+                            if (not gData:CheckSlipItem(slip, storageIndex)) and (not exclude:contains(item.Id)) and (includeList:contains(item.Id) == shouldContain) then
                                 if (type(prepItems[slipId]) ~= 'table') then
                                     prepItems[slipId] = T{{ ItemId = slip.Item.Id, Container = slip.Container, Index = slip.Index }};
                                 end
