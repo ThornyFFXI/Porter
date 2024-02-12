@@ -25,18 +25,14 @@ end
 
 function SettingsGui:Render()
     if (self.IsOpen[1]) then
-        imgui.SetNextWindowContentSize({ 223, 296 });
         if (imgui.Begin(string.format('%s v%s', addon.name, addon.version), self.IsOpen, ImGuiWindowFlags_AlwaysAutoResize)) then
-            imgui.BeginGroup();
             imgui.TextColored(self.Theme.Header, 'Save Mode');
             if imgui.Checkbox('Character-Specific', { self.Parent.CharacterSpecific }) then
                 self.Parent:ToggleCharacterSpecific();
                 self.SubWindows = T{};
             end
             imgui.ShowHelp('Uses settings specific to this character, rather than defaults.', true);
-            imgui.EndGroup();
             imgui.TextColored(self.Theme.Header, 'Settings');
-            imgui.BeginGroup();
             if (imgui.Button('Pack Exclusions')) then
                 itemList:New(self.SubWindows, self.Parent, 'ExcludePack', 'Porter: Pack Exclusions');
             end
@@ -81,7 +77,7 @@ function SettingsGui:Render()
                     self.Parent:Save(self.Parent.CharacterSpecific);
                 end
             end
-            if (imgui.Button('Defaults', { 100 })) then
+            if (imgui.Button('Defaults')) then
                 local path = self.Parent.Path;
                 local charSpecific = self.Parent.CharacterSpecific;
                 self.Parent:Reset();
@@ -89,11 +85,10 @@ function SettingsGui:Render()
                 self.Parent.Path = path;
                 self.Parent:Save();
             end
-            imgui.SameLine(imgui.GetWindowWidth() - 115);
-            if (imgui.Button('Help', { 100 })) then
+            imgui.SameLine();
+            if (imgui.Button('Help')) then
                 self.DisplayHelp = { true };
             end
-            imgui.EndGroup();
             imgui.End();
         end
 
