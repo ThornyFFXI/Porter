@@ -44,7 +44,7 @@ local function hasItem(id)
     local inventory = AshitaCore:GetMemoryManager():GetInventory();
     for container = 0,16 do
         for index = 1,81 do
-            local item = inventory:GetContainerItem(0, index);
+            local item = inventory:GetContainerItem(container, index);
             if (item.Id == id) and (item.Count > 0) then
                 return true;
             end
@@ -193,14 +193,16 @@ end
 function unpack:SendTrade()    
     local playerSlips = gData:GetPlayerSlips();
     for _,itemId in ipairs(self.Include) do
-        local slipId, storageIndex = gData:GetSlip(itemId);
-        if slipId then
-            local slip = playerSlips[slipId];
-            if slip and (slip.Container == 0) and gData:CheckSlipItem(slip, storageIndex) then
-                if (slip.Count) then
-                    slip.Count = slip.Count + 1;
-                else
-                    slip.Count = 1;
+        if not hasItem(itemId) then
+            local slipId, storageIndex = gData:GetSlip(itemId);
+            if slipId then
+                local slip = playerSlips[slipId];
+                if slip and (slip.Container == 0) and gData:CheckSlipItem(slip, storageIndex) then
+                    if (slip.Count) then
+                        slip.Count = slip.Count + 1;
+                    else
+                        slip.Count = 1;
+                    end
                 end
             end
         end

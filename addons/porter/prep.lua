@@ -25,7 +25,7 @@ local function hasItem(id)
     local inventory = AshitaCore:GetMemoryManager():GetInventory();
     for container = 0,16 do
         for index = 1,81 do
-            local item = inventory:GetContainerItem(0, index);
+            local item = inventory:GetContainerItem(container, index);
             if (item.Id == id) and (item.Count > 0) then
                 return true;
             end
@@ -38,9 +38,7 @@ function prep:PreparePack(includeList)
     local shouldContain = (gSettings.ReversePack == true);
     local exclude = gSettings.ExcludePack;
     local prepItems = T{};
-    
     local playerSlips = gData:GetPlayerSlips();
-    local output = {};
     for container = 0,16 do
         if gData:GetContainerAvailable(container) then
             local inventory = AshitaCore:GetMemoryManager():GetInventory();
@@ -68,7 +66,7 @@ function prep:PreparePack(includeList)
     local itemsRemaining = 0;
     local itemsRetrieved = 0;
     
-    for slipIndex,slipItems in pairs(prepItems) do
+    for _,slipItems in pairs(prepItems) do
         for _,item in ipairs(slipItems) do
             if (item.Container ~= 0) then
                 if freeSpace > 0 then
@@ -83,6 +81,9 @@ function prep:PreparePack(includeList)
     end
     
     print(chat.header('Porter') .. chat.color1(2, itemsRetrieved) .. chat.message(' items were retrieved.  ') .. chat.color1(2, itemsRemaining) .. chat.message(' items remain.'));
+    if gData:GetContainerAvailable(1) == false then
+        print(chat.header('Porter') .. chat.error('Note that you are not currently in range of a nomad moogle or in the mog house.'))
+    end
 end
 
 function prep:PrepareUnpack(includeList)
@@ -116,6 +117,9 @@ function prep:PrepareUnpack(includeList)
     end
     
     print(chat.header('Porter') .. chat.color1(2, itemsRetrieved) .. chat.message(' items were retrieved.  ') .. chat.color1(2, itemsRemaining) .. chat.message(' items remain.'));
+    if gData:GetContainerAvailable(1) == false then
+        print(chat.header('Porter') .. chat.error('Note that you are not currently in range of a nomad moogle or in the mog house.'))
+    end
 end
 
 function prep:RetrieveItem(container, index, id)
