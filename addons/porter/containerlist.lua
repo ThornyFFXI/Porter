@@ -58,7 +58,7 @@ function ContainerList:Render()
     imgui.SetNextWindowSizeConstraints({ 335, 220, }, { FLT_MAX, FLT_MAX, });
     if (imgui.Begin(self.DisplayName .. '##' .. addon.name .. '_ContainerList_' .. self.SettingName, self.IsOpen, ImGuiWindowFlags_NoResize)) then
         imgui.BeginGroup();
-        imgui.BeginChild('leftpane', { 100, 157 }, false, 128);
+        imgui.BeginChild('leftpane', { 100, 157 }, ImGuiChildFlags_None, 128);
         for i = 1,6 do
             if imgui.Checkbox(containerNames[i], { self.ActiveContainers[i] }) then
                 self.ActiveContainers[i] = not self.ActiveContainers[i];
@@ -68,7 +68,7 @@ function ContainerList:Render()
         imgui.EndGroup();
         imgui.SameLine();
         imgui.BeginGroup();
-        imgui.BeginChild('middlepane', { 100, 157 }, false, 128);
+        imgui.BeginChild('middlepane', { 100, 157 }, ImGuiChildFlags_None, 128);
         for i = 7,12 do
             if imgui.Checkbox(containerNames[i], { self.ActiveContainers[i] }) then
                 self.ActiveContainers[i] = not self.ActiveContainers[i];
@@ -78,7 +78,7 @@ function ContainerList:Render()
         imgui.EndGroup();
         imgui.SameLine();
         imgui.BeginGroup();
-        imgui.BeginChild('rightpane', { 100, 157 }, false, 128);
+        imgui.BeginChild('rightpane', { 100, 157 }, ImGuiChildFlags_None, 128);
         for i = 13,18 do
             if imgui.Checkbox(containerNames[i], { self.ActiveContainers[i] }) then
                 self.ActiveContainers[i] = not self.ActiveContainers[i];
@@ -101,8 +101,8 @@ function ContainerList:Render()
             self.SettingClass[self.SettingName] = returnTable;
             self.SettingClass:Save();
         end
-        imgui.End();
     end
+    imgui.End();
 end
 
 return ContainerList;

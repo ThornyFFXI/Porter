@@ -43,7 +43,7 @@ function ItemList:Render()
     if (imgui.Begin(self.DisplayName .. '##' .. addon.name .. '_ItemList_' .. self.SettingName, self.IsOpen, ImGuiWindowFlags_NoResize)) then
         imgui.BeginGroup();
         imgui.TextColored(self.Theme.Header, 'Current Items');
-        imgui.BeginChild('leftpane', { 220, 340 }, true);
+        imgui.BeginChild('leftpane', { 220, 340 }, ImGuiChildFlags_Borders);
         local items = self.ActiveItems;
         local deleteIndex = 0;
         for i = 0, #items - 1 do
@@ -88,7 +88,7 @@ function ItemList:Render()
         imgui.SetCursorPosY(imgui.GetCursorPosY() - imgui.GetStyle().FramePadding.y);
         imgui.BeginGroup();
         imgui.TextColored(self.Theme.Header, 'Item Lookup Tool');
-        imgui.BeginChild('rightpane', { 220, 340 }, true);
+        imgui.BeginChild('rightpane', { 220, 340 }, ImGuiChildFlags_Borders);
         imgui.PushItemWidth(-1);
         if (imgui.InputText('##Item Name', self.SearchBuffer, 256, ImGuiInputTextFlags_EnterReturnsTrue)) then
             self:Search();
@@ -131,8 +131,8 @@ function ItemList:Render()
             self.SettingClass:Save();
         end
         imgui.EndGroup();
-        imgui.End();
     end
+    imgui.End();
 end
 
 function ItemList:Search()

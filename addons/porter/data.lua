@@ -95,7 +95,7 @@ function data:CheckForNomad()
                 end
             end
         end
-    end                
+    end
 end
 
 function data:GetAccountFlags()

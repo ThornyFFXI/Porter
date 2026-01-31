@@ -89,8 +89,8 @@ function SettingsGui:Render()
             if (imgui.Button('Help')) then
                 self.DisplayHelp = { true };
             end
-            imgui.End();
         end
+        imgui.End();
 
         local swapWindows = T{};
         for _,v in pairs(self.SubWindows) do
@@ -119,8 +119,8 @@ function SettingsGui:Render()
             imgui.TextColored(self.Theme.Command, 'Ashitacast, LegacyAC, and LuAshitacast Integration');
             imgui.TextWrapped('Prefixing any of the above commands with /ac(Ashitacast or LegacyAC) or /lac(LuAshitacast) instead of /po will trigger the command using your currently loaded XML or Lua profile as an item list.');
             imgui.EndGroup();
-            imgui.End();
         end
+        imgui.End();
     end
 end
 
