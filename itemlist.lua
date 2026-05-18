@@ -110,9 +110,13 @@ function ItemList:Render()
             if (imgui.IsItemHovered() and imgui.IsMouseDoubleClicked(0)) then
                 local addItem = self.SearchItems[self.SearchSelected[1] + 1];
                 if addItem then
-                    self.ActiveItems:append(T{ addItem[1], addItem[2] });
+                    if self.ActiveItems:find_if(function(item) return item[2] == addItem[2] end) then
+                        print(chat.header('ItemList') .. chat.error('Item is already in list.'));
+                    else
+                        self.ActiveItems:append(T{ addItem[1], addItem[2] });
+                        self.SearchSelected[1] = -1;
+                    end
                 end
-                self.SearchSelected[1] = -1;
             end
         end
         imgui.EndChild();

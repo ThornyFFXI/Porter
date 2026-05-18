@@ -1,11 +1,21 @@
+local function Unique(inputTable)
+    local found = {}
+    inputTable = T(inputTable)
+    return inputTable:filteri(function(entry)
+        if found[entry] then return false end
+        found[entry] = true;
+        return true
+    end)
+end
+
 local function LoadCallbackFunction(self)
     if (type(self.ExcludePack) == 'table') then
-        self.ExcludePack = T(self.ExcludePack);
+        self.ExcludePack = Unique(self.ExcludePack);
     else
         self.ExcludePack = T{};
     end
     if (type(self.ExcludeUnpack) == 'table') then
-        self.ExcludeUnpack = T(self.ExcludeUnpack);
+        self.ExcludeUnpack = Unique(self.ExcludeUnpack);
     else
         self.ExcludeUnpack = T{};
     end

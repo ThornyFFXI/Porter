@@ -129,7 +129,7 @@ function pack:SendTrade()
     local inventory = AshitaCore:GetMemoryManager():GetInventory();
     for index = 1,81 do
         local item = inventory:GetContainerItem(0, index);
-        if (item.Id > 0) and (item.Count > 0) then
+        if (item.Id > 0) and (item.Count > 0) and (item.Flags == 0) then
             local slipNumber, storageIndex = gData:GetSlip(item.Id);
             if slipNumber then
                 if (self.Include:contains(item.Id) == shouldContain) and (not gSettings.ExcludePack:contains(item.Id)) then
