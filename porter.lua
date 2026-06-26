@@ -1,10 +1,14 @@
 addon.name      = 'Porter';
 addon.author    = 'Thorny';
-addon.version   = '1.13';
+addon.version   = '1.14';
 addon.desc      = 'Simplifies usage of porter moogles.';
 addon.link      = 'https://github.com/ThornyFFXI/';
 
 require('common');
+if (ashita.addons_version >= 4.3) then
+    addon.instance:enable_feature(addon_feature.use_packet_chunks);
+end
+
 chat = require('chat');
 gData = require('data');
 gPack = require('pack');
