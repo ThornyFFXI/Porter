@@ -21,7 +21,7 @@ local containerNames = {
     'Recycle'
 };
 
-local function hasItem(id)
+local function HasItem(id)
     local inventory = AshitaCore:GetMemoryManager():GetInventory();
     for container = 0,16 do
         for index = 1,81 do
@@ -34,6 +34,64 @@ local function hasItem(id)
     return false;
 end
 
+local function IsValid(item)
+    if item == nil then
+        return false;
+    end
+
+    if (item.Count == 0) or (item.Id == 0) then
+        return false;
+    end
+    
+    return true;
+end
+
+local furnitureTypes = T{ [10]=true, [11]=true, [12]=true, [14]=true };
+local function CanMove(item)
+    -- Don't try to move equipped, bazaared, etc.. items
+    if (item.Flags ~= 0) then
+        return false;
+    end
+
+    -- Don't try to move placed furniture
+    local res = AshitaCore:GetResourceManager():GetItemById(item.Id);
+    if furnitureTypes[res.Type] then
+        local placeFlags = struct.unpack('B', item.Extra, 2);
+        if (bit.band(placeFlags, 0x40) == 0x40) then
+            return false;
+        end
+    end
+
+    return true;
+end
+
+local function GetMatchingSlip(playerSlips, item)
+    -- Verify the item's ID fits on a slip..
+    local slipId, storageIndex = gData:GetSlip(item.Id);
+    if not slipId then
+        return false;
+    end
+
+    -- Verify the item is augmented if the slip expects it (relic augments)
+    -- or not augmented if it doesn't (sky gear)
+    if not gData:CheckAugment(slipId, item.Extra) then
+        return false;
+    end
+
+    -- Verify the player has a matching slip..
+    local playerSlip = playerSlips[slipId];
+    if not playerSlip then
+        return false;
+    end
+
+    -- Verify the matching slip doesn't already have the item in it..
+    if gData:CheckSlipItem(playerSlip, storageIndex) then
+        return false;
+    end
+    
+    return playerSlip;
+end
+
 function prep:PreparePack(includeList)
     local shouldContain = (gSettings.ReversePack == true);
     local exclude = gSettings.ExcludePack;
@@ -44,17 +102,15 @@ function prep:PreparePack(includeList)
             local inventory = AshitaCore:GetMemoryManager():GetInventory();
             for index = 1,81 do
                 local item = inventory:GetContainerItem(container, index);
-                if item and (item.Id > 0) and (item.Count > 0) and (item.Flags ~= 5) and (item.Flags ~= 19) and (item.Flags ~= 25) then
-                    local slipId, storageIndex = gData:GetSlip(item.Id);
-                    if slipId and storageIndex and gData:CheckAugment(slipId, item.Extra) then
-                        local slip = playerSlips[slipId];
-                        if slip then
-                            if (not gData:CheckSlipItem(slip, storageIndex)) and (not exclude:contains(item.Id)) and (includeList:contains(item.Id) == shouldContain) then
-                                if (type(prepItems[slipId]) ~= 'table') then
-                                    prepItems[slipId] = T{{ ItemId = slip.Item.Id, Container = slip.Container, Index = slip.Index }};
-                                end
-                                prepItems[slipId]:append({ ItemId = item.Id, Container = container, Index = index });
+                if IsValid(item) then
+                    local playerSlip = GetMatchingSlip(playerSlips, item);
+                    if playerSlip and CanMove(item) then
+                        if (not exclude:contains(item.Id)) and (includeList:contains(item.Id) == shouldContain) then
+                            local slipId = playerSlip.Item.Id;
+                            if (type(prepItems[slipId]) ~= 'table') then
+                                prepItems[slipId] = T{{ ItemId = slipId, Container = playerSlip.Container, Index = playerSlip.Index }};
                             end
+                            prepItems[slipId]:append({ ItemId = item.Id, Container = container, Index = index });
                         end
                     end
                 end
@@ -93,7 +149,7 @@ function prep:PrepareUnpack(includeList)
     for id,slip in pairs(playerSlips) do
         local slipItems = gData:GetSlipItems(slip);
         for _,item in pairs(slipItems) do
-            if (includeList:contains(item)) and (not hasItem(item)) then
+            if (includeList:contains(item)) and (not HasItem(item)) then
                 retrieveSlips:append(slip);
                 break;
             end
@@ -123,9 +179,12 @@ function prep:PrepareUnpack(includeList)
 end
 
 function prep:RetrieveItem(container, index, id)
-    local packet = struct.pack('LLBBBB', 0, 1, container, 0, index, 0x52);
-    AshitaCore:GetPacketManager():AddOutgoingPacket(0x29, packet:totable());
-    print(chat.header('Porter') .. chat.message('Retrieving a ') .. chat.color1(2, AshitaCore:GetResourceManager():GetItemById(id).Name[1]) .. chat.message(' from ') .. chat.color1(2, containerNames[container + 1]) .. chat.message('.'));
+    local item = AshitaCore:GetMemoryManager():GetInventory():GetContainerItem(container, index);
+    if CanMove(item) then
+        local packet = struct.pack('LLBBBB', 0, 1, container, 0, index, 0x52);
+        AshitaCore:GetPacketManager():AddOutgoingPacket(0x29, packet:totable());
+        print(chat.header('Porter') .. chat.message('Retrieving a ') .. chat.color1(2, AshitaCore:GetResourceManager():GetItemById(id).Name[1]) .. chat.message(' from ') .. chat.color1(2, containerNames[container + 1]) .. chat.message('.'));
+    end
 end
 
 return prep;
